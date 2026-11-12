@@ -1,0 +1,38 @@
+<Window x:Class="WinOptimizer.DisclaimerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WinOptimizer - Disclaimer" Width="560" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource Bg}"
+        FontFamily="Segoe UI" FontSize="13" Foreground="{StaticResource Text}"
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+    <StackPanel Margin="28">
+        <TextBlock Text="Before you start" FontSize="22" FontWeight="SemiBold"/>
+        <TextBlock Text="Please read this. It is short." Foreground="{StaticResource Muted}" Margin="0,2,0,16"/>
+
+        <Border Background="{StaticResource Card}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" Padding="18">
+            <StackPanel>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
+                    <Run FontWeight="SemiBold">WinOptimizer only looks and advises.</Run>
+                    It reads information about this computer and lists changes you could make. It never changes, disables or uninstalls anything itself.
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
+                    Any change you make based on its advice is made by you, of your own free will. The advice may be incomplete or wrong for your particular PC, and some changes can stop programs, or Windows itself, from working.
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
+                    This software is provided "as is", without warranty of any kind. The author is not liable for any damage, data loss, failure or other problem, whatever the cause, arising from using this program or acting on its recommendations.
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    By continuing you confirm that you are using this program by your own choice, at your own risk, and that you accept full responsibility for your own actions, like a grown adult. Back up your files and create a restore point before changing anything.
+                </TextBlock>
+            </StackPanel>
+        </Border>
+
+        <CheckBox x:Name="AgreeBox" Margin="2,16,0,0" Content="I have read this, I understand it, and I accept full responsibility."
+                  Checked="Agree_Changed" Unchecked="Agree_Changed"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Exit" Style="{StaticResource BtnGhost}" IsCancel="True" Margin="0,0,8,0"/>
+            <Button x:Name="AcceptBtn" Content="I accept - continue" Style="{StaticResource Btn}" IsEnabled="False" Click="Accept_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>
