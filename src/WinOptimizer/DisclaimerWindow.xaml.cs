@@ -7,6 +7,7 @@ namespace WinOptimizer
         public DisclaimerWindow()
         {
             InitializeComponent();
+            Native.DarkTitleBar(this);
         }
 
         void Agree_Changed(object sender, RoutedEventArgs e)

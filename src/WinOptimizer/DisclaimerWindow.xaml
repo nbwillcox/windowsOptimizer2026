@@ -3,13 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="WinOptimizer - Disclaimer" Width="560" SizeToContent="Height" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen" Background="{StaticResource Bg}"
-        FontFamily="Segoe UI" FontSize="13" Foreground="{StaticResource Text}"
+        FontFamily="{StaticResource Mono}" FontSize="13" Foreground="{StaticResource Text}"
         UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+  <Grid>
+    <Rectangle Fill="{StaticResource Scanlines}" IsHitTestVisible="False"/>
     <StackPanel Margin="28">
-        <TextBlock Text="Before you start" FontSize="22" FontWeight="SemiBold"/>
+        <TextBlock Text="&gt; Before you start" FontSize="22" FontWeight="Bold" Foreground="{StaticResource Accent}"/>
         <TextBlock Text="Please read this. It is short." Foreground="{StaticResource Muted}" Margin="0,2,0,16"/>
 
-        <Border Background="{StaticResource Card}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" Padding="18">
+        <Border Background="{StaticResource Card}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="3" Padding="18">
             <StackPanel>
                 <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
                     <Run FontWeight="SemiBold">WinOptimizer only looks and advises.</Run>
@@ -27,7 +29,7 @@
             </StackPanel>
         </Border>
 
-        <CheckBox x:Name="AgreeBox" Margin="2,16,0,0" Content="I have read this, I understand it, and I accept full responsibility."
+        <CheckBox x:Name="AgreeBox" Margin="2,16,0,0" Foreground="{StaticResource Text}" Content="I have read this, I understand it, and I accept full responsibility."
                   Checked="Agree_Changed" Unchecked="Agree_Changed"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
@@ -35,4 +37,5 @@
             <Button x:Name="AcceptBtn" Content="I accept - continue" Style="{StaticResource Btn}" IsEnabled="False" Click="Accept_Click"/>
         </StackPanel>
     </StackPanel>
+  </Grid>
 </Window>

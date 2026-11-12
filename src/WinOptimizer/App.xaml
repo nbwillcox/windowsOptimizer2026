@@ -3,36 +3,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
-        <SolidColorBrush x:Key="Bg" Color="#F4F5F7"/>
-        <SolidColorBrush x:Key="Card" Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="Line" Color="#E4E7EC"/>
-        <SolidColorBrush x:Key="Text" Color="#2F3542"/>
-        <SolidColorBrush x:Key="Muted" Color="#7A8394"/>
-        <SolidColorBrush x:Key="Accent" Color="#6C8EBF"/>
-        <SolidColorBrush x:Key="Warn" Color="#FBF3DF"/>
-        <SolidColorBrush x:Key="WarnText" Color="#7A5A12"/>
+        <!-- Terminal theme: phosphor green on near-black. All static; nothing animates while idle. -->
+        <SolidColorBrush x:Key="Bg" Color="#070B09"/>
+        <SolidColorBrush x:Key="Card" Color="#0C1410"/>
+        <SolidColorBrush x:Key="Line" Color="#1D4A31"/>
+        <SolidColorBrush x:Key="Text" Color="#B9F6CC"/>
+        <SolidColorBrush x:Key="Muted" Color="#5F9A78"/>
+        <SolidColorBrush x:Key="Accent" Color="#39FF88"/>
+        <SolidColorBrush x:Key="OnAccent" Color="#03130A"/>
+        <SolidColorBrush x:Key="Warn" Color="#241D07"/>
+        <SolidColorBrush x:Key="WarnText" Color="#FFC857"/>
+        <FontFamily x:Key="Mono">Consolas, Cascadia Mono, Courier New</FontFamily>
+
+        <!-- Faint CRT scanlines, drawn once as a tiled brush -->
+        <DrawingBrush x:Key="Scanlines" TileMode="Tile" Viewport="0,0,4,4" ViewportUnits="Absolute" Viewbox="0,0,4,4" ViewboxUnits="Absolute">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing Brush="#1239FF88">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,4,1"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
 
         <Style x:Key="Btn" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource Accent}"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource OnAccent}"/>
             <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="18,8"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="b" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="b" Property="Opacity" Value="0.85"/>
+                                <Setter TargetName="b" Property="Opacity" Value="0.8"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="b" Property="Opacity" Value="0.4"/>
+                                <Setter TargetName="b" Property="Opacity" Value="0.35"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -41,8 +55,8 @@
         </Style>
 
         <Style x:Key="BtnGhost" TargetType="Button" BasedOn="{StaticResource Btn}">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="Background" Value="{StaticResource Card}"/>
+            <Setter Property="Foreground" Value="{StaticResource Accent}"/>
             <Setter Property="BorderBrush" Value="{StaticResource Line}"/>
         </Style>
 
@@ -52,15 +66,15 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
-                        <Border x:Name="b" Background="White" BorderBrush="{StaticResource Line}" BorderThickness="1"
-                                CornerRadius="13" Padding="12,4" Margin="0,0,6,6">
+                        <Border x:Name="b" Background="{StaticResource Card}" BorderBrush="{StaticResource Line}" BorderThickness="1"
+                                CornerRadius="3" Padding="12,4" Margin="0,0,6,6">
                             <ContentPresenter/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="b" Property="Background" Value="{StaticResource Accent}"/>
                                 <Setter TargetName="b" Property="BorderBrush" Value="{StaticResource Accent}"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Foreground" Value="{StaticResource OnAccent}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -81,6 +95,45 @@
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <!-- Slim dark scrollbar -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Width" Value="10"/>
+            <Setter Property="MinWidth" Value="10"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="Transparent">
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Background="{StaticResource Line}" CornerRadius="2" Margin="3,0,1,0"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ToolTip">
+            <Setter Property="Background" Value="{StaticResource Card}"/>
+            <Setter Property="Foreground" Value="{StaticResource Text}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Line}"/>
+            <Setter Property="FontFamily" Value="{StaticResource Mono}"/>
         </Style>
     </Application.Resources>
 </Application>

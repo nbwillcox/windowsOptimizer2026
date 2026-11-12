@@ -31,6 +31,7 @@ namespace WinOptimizer
         public MainWindow()
         {
             InitializeComponent();
+            Native.DarkTitleBar(this);
             AdminBanner.Visibility = Native.IsAdmin ? Visibility.Collapsed : Visibility.Visible;
             _loading = true;
             SortList.ItemsSource = new[]
@@ -50,10 +51,16 @@ namespace WinOptimizer
             Cards.ItemsSource = null;
             SummaryItems.Visibility = FilterPanel.Visibility = Visibility.Collapsed;
             StatusPanel.Visibility = Progress.Visibility = Visibility.Visible;
-            StatusText.Text = "Starting scan...";
+            StatusText.Text = "> initializing scan...";
             Progress.IsIndeterminate = true; // animation runs only while scanning, so the app idles at zero CPU
 
-            var progress = new Progress<string>(s => StatusText.Text = s);
+            // Each scan stage is appended as a terminal-style log line.
+            var log = new StringBuilder("> initializing scan...");
+            var progress = new Progress<string>(s =>
+            {
+                log.Append("\n[+] ").Append(s);
+                StatusText.Text = log.ToString();
+            });
             try
             {
                 _result = await Task.Run(() => ScanEngine.Run(progress));
@@ -62,7 +69,7 @@ namespace WinOptimizer
             catch (Exception ex)
             {
                 Progress.Visibility = Visibility.Collapsed;
-                StatusText.Text = "The scan could not finish: " + ex.Message;
+                StatusText.Text = "[!] The scan could not finish: " + ex.Message;
             }
             Progress.IsIndeterminate = false;
             ScanBtn.Content = "Scan again";
@@ -118,7 +125,7 @@ namespace WinOptimizer
             if (list.Count == 0)
             {
                 StatusPanel.Visibility = Visibility.Visible;
-                StatusText.Text = "Nothing to recommend here. This PC already looks well tuned.";
+                StatusText.Text = "[ok] Nothing to recommend here. This PC already looks well tuned.";
             }
             else StatusPanel.Visibility = Visibility.Collapsed;
         }

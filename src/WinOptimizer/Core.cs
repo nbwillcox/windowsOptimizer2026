@@ -57,7 +57,9 @@ namespace WinOptimizer
             return this;
         }
 
-        public int Score =>(int)Impact * 3 - (int)Difficulty - (int)Risk * 2;
+        public string CategoryTag => "[ " + (Category ?? "").ToUpperInvariant() + " ]";
+
+        public int Score => (int)Impact * 3 - (int)Difficulty - (int)Risk * 2;
 
         public List<string> NumberedSteps => Steps.Select((s, i) => (i + 1) + ".  " + s).ToList();
 
@@ -95,13 +97,13 @@ namespace WinOptimizer
         }
 
         // 0 green, 1 lime, 2 amber, 3 red, 4 deep red
-        static readonly Brush[] bg = { B("#DDEFE3"), B("#E9F0D3"), B("#F8ECCF"), B("#F6D8D5"), B("#E7B4B4") };
-        static readonly Brush[] fg = { B("#2F6B45"), B("#56661F"), B("#7A5A12"), B("#8C2F2F"), B("#641818") };
+        static readonly Brush[] bg = { B("#0E2A1A"), B("#1F2A0E"), B("#2E2508"), B("#35120F"), B("#520B0B") };
+        static readonly Brush[] fg = { B("#4DFF9A"), B("#C6F25A"), B("#FFC857"), B("#FF7466"), B("#FF4040") };
         public static Brush Bg(int i) => bg[Math.Max(0, Math.Min(4, i))];
         public static Brush Fg(int i) => fg[Math.Max(0, Math.Min(4, i))];
 
-        public static readonly Brush[] ImpactBg = { B("#ECEEF2"), B("#DCE7F5"), B("#C6D9F1") };
-        public static readonly Brush[] ImpactFg = { B("#5A6373"), B("#2F527F"), B("#1E4070") };
+        public static readonly Brush[] ImpactBg = { B("#151C19"), B("#0B2530"), B("#093445") };
+        public static readonly Brush[] ImpactFg = { B("#7FA08C"), B("#5FD4F0"), B("#8CEEFF") };
     }
 
     public class SystemSummary
@@ -237,6 +239,24 @@ namespace WinOptimizer
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         public static extern int SHQueryRecycleBin(string root, ref SHQUERYRBINFO info);
+
+        [DllImport("dwmapi.dll")]
+        static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
+
+        /// <summary>Asks Windows to draw this window's own title bar dark. Cosmetic, affects only this window.</summary>
+        public static void DarkTitleBar(System.Windows.Window w)
+        {
+            w.SourceInitialized += (s, e) =>
+            {
+                try
+                {
+                    int on = 1;
+                    IntPtr h = new System.Windows.Interop.WindowInteropHelper(w).Handle;
+                    if (DwmSetWindowAttribute(h, 20, ref on, 4) != 0) DwmSetWindowAttribute(h, 19, ref on, 4);
+                }
+                catch { }
+            };
+        }
 
         public static bool IsAdmin
         {
