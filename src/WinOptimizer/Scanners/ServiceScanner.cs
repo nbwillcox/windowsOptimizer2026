@@ -126,7 +126,7 @@ namespace WinOptimizer.Scanners
             {
                 thirdParty.Sort(StringComparer.OrdinalIgnoreCase);
                 var rec = ctx.Add("Services", "Review " + thirdParty.Count + " non-Microsoft background services",
-                    "These third-party services start automatically and are running now (grouped by publisher):",
+                    "These third-party services start automatically and are running now (A-Z, read down each column):",
                     "Installed programs often add always-on services (updaters, launchers, helper tools). Each uses memory and adds to boot time. Ones belonging to software you rarely use can be set to Manual. Security software has been left out of this list on purpose.",
                     "Services console (services.msc), or uninstall the parent program if unused",
                     Difficulty.Hard, Impact.Medium, Risk.High,
@@ -136,8 +136,10 @@ namespace WinOptimizer.Scanners
                     "If it belongs to software you do not use, uninstall that software instead (cleanest option).",
                     "Otherwise double-click it and set 'Startup type' to Manual. Change one at a time and restart to confirm nothing broke.",
                     "To undo: set 'Startup type' back to Automatic.").Link("services.msc", "Open Services");
-                // Sorted by publisher (the part before the separator), shown as "Service - Publisher".
-                rec.Items = thirdParty.Select(t => t.Split('\u0001')).Select(p => p[1] + "  —  " + p[0]).ToList();
+                // Alphabetical by service name, matching the order of the Services window. Shown as "Service - Publisher".
+                rec.Items = thirdParty.Select(t => t.Split('\u0001'))
+                    .OrderBy(p => p[1], StringComparer.CurrentCultureIgnoreCase)
+                    .Select(p => p[1] + "  —  " + p[0]).ToList();
             }
         }
 

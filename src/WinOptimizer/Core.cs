@@ -28,7 +28,24 @@ namespace WinOptimizer
 
         /// <summary>Optional list shown as bullets under the finding.</summary>
         public List<string> Items { get; set; } = new List<string>();
-        public List<string> BulletItems => Items.Select(s => "•  " + s).ToList();
+        /// <summary>
+        /// Items laid out for the two-column grid so they read top-to-bottom down the left column,
+        /// then down the right one (the grid itself fills left-to-right).
+        /// </summary>
+        public List<string> BulletItems
+        {
+            get
+            {
+                int rows = (Items.Count + 1) / 2;
+                var cells = new List<string>();
+                for (int r = 0; r < rows; r++)
+                {
+                    cells.Add("•  " + Items[r]);
+                    cells.Add(rows + r < Items.Count ? "•  " + Items[rows + r] : "");
+                }
+                return cells;
+            }
+        }
 
         /// <summary>Optional Windows page to open for the user: "target" or "target|arguments". Opening it changes nothing.</summary>
         public string Open { get; set; }
